@@ -35,8 +35,8 @@ export default function Home() {
         )}
         {navStage === "form" && <WaitlistForm setNavStage={setNavStage} />}
         {navStage === "success" && (
-          <div>
-            <p className="ms-5 me-5 text-primary">
+          <div className="d-flex flex-column align-items-center">
+            <p className="text-primary mb-1">
               Thank you for joining the waitlist! We will be in touch soon.
             </p>
           </div>
