@@ -1,0 +1,85 @@
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Purple - 7749F8; Green - 4AB69B; Yellow - F6C651
+
+$primary: #7749f8;
+$secondary: #46eb9c;
+$danger: #ff4e64;
+
+$accent: #2bedc7;
+$headings-font-weight: 700;
+$enable-negative-margins: true;
+
+// Gray colors
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #1a1a1a;
+
+// Input customization
+$input-border-radius: 0px;
+$input-border-radius-sm: 0px;
+$input-border-radius-lg: 0px;
+$input-focus-color: #1a1a1a;
+$input-focus-width: 1px;
+$input-focus-box-shadow: 0px;
+$input-border-color: #acacac;
+$input-focus-border-color: #1a1a1a;
+$input-padding-y: 0.75rem;
+
+// Buttons
+$btn-border-radius: 0px;
+$btn-border-radius-sm: 0px;
+$btn-border-radius-lg: 0px;
+$btn-border-width: 1px;
+$btn-border-color: #1a1a1a;
+$btn-padding-y: 0.75rem;
+$btn-padding-x: 1.25rem;
+
+$font-size-base: 1rem;
+
+// Dropdowns
+$dropdown-border-radius: 0px;
+$dropdown-spacer: 0px;
+
+// Headers
+$h1-font-size: $font-size-base * 3.5;
+$h2-font-size: $font-size-base * 3;
+$h3-font-size: $font-size-base * 2;
+$h4-font-size: $font-size-base * 1.5;
+$h5-font-size: $font-size-base * 1.25;
+$h6-font-size: $font-size-base;
+
+$enable-validation-icons: false;
+
+
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+
+.w-75-md {
+  width: 90% !important;
+}
+.ms-n1 {
+  margin-left: -1px !important;
+}
+
+@include media-breakpoint-up(md) {
+  .w-75-md {
+    width: 75% !important;
+  }
+}

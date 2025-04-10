@@ -1,95 +1,170 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { SetStateAction, useState } from "react";
+import clsx from "clsx";
+import { Client } from "@notionhq/client";
+import { Dispatch } from "react";
+
+const notion = new Client({
+  auth: process.env.NOTION_KEY,
+});
+
+type navStages = "start" | "form" | "success";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [navStage, setNavStage] = useState<navStages>("start");
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  return (
+    <div className="d-flex align-items-center justify-content-center vh-100">
+      <div className="text-center d-flex flex-column align-items-center">
+        <h3 className="mt-5">
+          <span className="fw-light">You: </span>Quantified
+        </h3>
+        <p className="w-75 mb-5">
+          We’re building a platform for creative, multimodal data representation
+          of biometric data.
+        </p>
+      </div>
+      <div className="position-fixed bottom-0 mb-4 d-flex flex-column align-items-center text-center">
+        {navStage === "start" && (
+          <button
+            className="btn btn-primary btn-outline-dark text-white"
+            onClick={() => setNavStage("form")}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            Join the waitlist
+          </button>
+        )}
+        {navStage === "form" && <WaitlistForm setNavStage={setNavStage} />}
+        {navStage === "success" && (
+          <div>
+            <p className="ms-5 me-5 text-primary">
+              Thank you for joining the waitlist! We will be in touch soon.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
+function RoleButton({
+  role,
+  selectedRole,
+  setSelectedRole,
+}: {
+  role: string;
+  selectedRole: string | undefined;
+  setSelectedRole: (role: string | undefined) => void;
+}) {
+  const style = clsx(
+    "btn btn-outline-dark m-1",
+    selectedRole === role ? "active" : ""
+  );
+
+  return (
+    <button
+      className={style}
+      onClick={() => setSelectedRole(role)}
+      type="button"
+    >
+      {role}
+    </button>
+  );
+}
+
+function WaitlistForm({
+  setNavStage,
+}: {
+  setNavStage: Dispatch<SetStateAction<navStages>>;
+}) {
+  const roles = ["Educator", "Artist", "Scientist"];
+
+  const [selectedRole, setSelectedRole] = useState<string | undefined>(
+    undefined
+  );
+
+  const [email, setEmail] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>(
+    "Please select a role"
+  );
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSubmitting(true);
+
+    if (!selectedRole) {
+      setErrorMessage("Please select a role");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setErrorMessage("Please enter a valid email");
+      return;
+    }
+
+    setErrorMessage("Please select a role");
+
+    const res = await fetch("/api/notion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, selectedRole }),
+    });
+
+    if (!res.ok || res.status !== 200) {
+      console.error("Error submitting form");
+      setErrorMessage("There was an error submitting the form.");
+      return;
+    }
+    setNavStage("success");
+  }
+
+  if (isSubmitting) {
+    return (
+      <div className="d-flex flex-column align-items-center">
+        <p className="placeholder-wave text-primary">Submitting...</p>
+      </div>
+    );
+  }
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="d-flex flex-column align-items-center"
+    >
+      {<p className="text-body-tertiary mb-0">{errorMessage}</p>}
+      <div className="d-flex w-100 justify-content-center mb-1">
+        {roles.map((role) => (
+          <RoleButton
+            key={role}
+            role={role}
+            selectedRole={selectedRole}
+            setSelectedRole={setSelectedRole}
+          />
+        ))}
+      </div>
+      <div className="d-flex w-50 mt-0 w-100">
+        <input
+          className="form-control"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        ></input>
+        <button
+          className={clsx("btn btn-outline-dark btn-secondary ms-n1")}
+          type="submit"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  );
+}
+
+// Utility
+const validateEmail = (email: String) => {
+  return email.match(
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  );
+};
