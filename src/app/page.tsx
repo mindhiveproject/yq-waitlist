@@ -95,15 +95,15 @@ function WaitlistForm({
 
     if (!selectedRole) {
       setErrorMessage("Please select a role");
+      setIsSubmitting(false);
       return;
     }
 
     if (!validateEmail(email)) {
       setErrorMessage("Please enter a valid email");
+      setIsSubmitting(false);
       return;
     }
-
-    setErrorMessage("Please select a role");
 
     const res = await fetch("/api/notion", {
       method: "POST",
@@ -116,8 +116,10 @@ function WaitlistForm({
     if (!res.ok || res.status !== 200) {
       console.error("Error submitting form");
       setErrorMessage("There was an error submitting the form.");
+      setIsSubmitting(false);
       return;
     }
+    
     setNavStage("success");
   }
 
