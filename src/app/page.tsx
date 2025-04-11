@@ -20,11 +20,11 @@ export default function Home() {
           <span className="fw-light">You: </span>Quantified
         </h3>
         <p className="w-75 mb-5">
-          We’re building a platform for creative, multimodal data representation
+          We’re building a platform for creative, multimodal data representations
           of biometric data.
         </p>
       </div>
-      <div className="position-fixed bottom-0 mb-4 d-flex flex-column align-items-center text-center">
+      <div className="w-100 position-fixed bottom-0 mb-4 d-flex flex-column align-items-center text-center">
         {navStage === "start" && (
           <button
             className="btn btn-primary btn-outline-dark text-white"
@@ -35,9 +35,9 @@ export default function Home() {
         )}
         {navStage === "form" && <WaitlistForm setNavStage={setNavStage} />}
         {navStage === "success" && (
-          <div className="d-flex flex-column align-items-center">
-            <p className="text-primary mb-1">
-              Thank you for joining the waitlist! We will be in touch soon.
+          <div className="d-flex flex-column align-items-center ms-5 me-5">
+            <p className="text-primary">
+              Thank you for joining the waitlist! We will get in touch soon.
             </p>
           </div>
         )}
