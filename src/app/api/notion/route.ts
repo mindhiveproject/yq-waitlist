@@ -1,6 +1,6 @@
 export async function POST(req: Request) {
 
-  const { email, selectedRole } = await req.json();
+  const { email, selectedRole, bio } = await req.json();
 
   try {
     const response = await fetch("https://api.notion.com/v1/pages", {
@@ -29,6 +29,15 @@ export async function POST(req: Request) {
             select: {
               name: selectedRole,
             },
+          },
+          Description: {
+            rich_text: [
+              {
+                text: {
+                  content: bio
+                },
+              },
+            ],
           },
         },
       }),

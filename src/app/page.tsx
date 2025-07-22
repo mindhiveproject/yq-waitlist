@@ -83,6 +83,7 @@ function WaitlistForm({
   );
 
   const [email, setEmail] = useState<string>("");
+  const [bio, setBio] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>(
     "Please select a role"
   );
@@ -105,12 +106,18 @@ function WaitlistForm({
       return;
     }
 
+    if (!(bio.trim().length > 0)) {
+      setErrorMessage("Please say more about your prospective implementation of You: Quantified");
+      setIsSubmitting(false);
+      return;
+    }
+
     const res = await fetch("/api/notion", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, selectedRole }),
+      body: JSON.stringify({ email, selectedRole, bio }),
     });
 
     if (!res.ok || res.status !== 200) {
@@ -146,13 +153,23 @@ function WaitlistForm({
           />
         ))}
       </div>
-      <div className="d-flex w-50 mt-0 w-100">
+      <div className="d-flex w-100 justify-content-center mb-1">
         <input
           className="form-control"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         ></input>
+      </div>
+      <div className="d-flex w-100 justify-content-center mb-1">
+        <input
+          className="form-control"
+          placeholder="Tell us more about you ..."
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          ></input>
+        </div>
+      <div className="d-flex w-50 mt-0 w-100 mt-20">
         <button
           className={clsx("btn btn-outline-dark btn-secondary ms-n1")}
           type="submit"
