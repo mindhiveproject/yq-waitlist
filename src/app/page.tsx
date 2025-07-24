@@ -156,19 +156,19 @@ function WaitlistForm({
       <div className="d-flex w-100 justify-content-center mb-1">
         <input
           className="form-control"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        ></input>
-      </div>
-      <div className="d-flex w-100 justify-content-center mb-1">
-        <input
-          className="form-control"
           placeholder="Tell us more about you ..."
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           ></input>
         </div>
+      <div className="d-flex w-100 justify-content-center mb-1">
+        <input
+          className="form-control"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        ></input>
+      </div>
       <div className="d-flex w-50 mt-0 w-100 mt-20">
         <button
           className={clsx("btn btn-outline-dark btn-secondary ms-n1")}
